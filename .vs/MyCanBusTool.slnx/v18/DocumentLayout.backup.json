@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\ws_VisualStudio\\MyCanBusTool\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|d:\\ws_visualstudio\\mycanbustool\\canlogentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|solutionrelative:canlogentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|d:\\ws_visualstudio\\mycanbustool\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|d:\\ws_visualstudio\\mycanbustool\\multimediatimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|solutionrelative:multimediatimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|d:\\ws_visualstudio\\mycanbustool\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{7AD243EF-A787-4EA9-952A-F44ABEBB677E}|MyCanBusTool.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CanLogEntry.cs",
+              "DocumentMoniker": "D:\\ws_VisualStudio\\MyCanBusTool\\CanLogEntry.cs",
+              "RelativeDocumentMoniker": "CanLogEntry.cs",
+              "ToolTip": "D:\\ws_VisualStudio\\MyCanBusTool\\CanLogEntry.cs",
+              "RelativeToolTip": "CanLogEntry.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-03T07:07:54.071Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MultimediaTimer.cs",
+              "DocumentMoniker": "D:\\ws_VisualStudio\\MyCanBusTool\\MultimediaTimer.cs",
+              "RelativeDocumentMoniker": "MultimediaTimer.cs",
+              "ToolTip": "D:\\ws_VisualStudio\\MyCanBusTool\\MultimediaTimer.cs",
+              "RelativeToolTip": "MultimediaTimer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-03T07:04:41.816Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\ws_VisualStudio\\MyCanBusTool\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "D:\\ws_VisualStudio\\MyCanBusTool\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-12-03T07:01:56.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\ws_VisualStudio\\MyCanBusTool\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "D:\\ws_VisualStudio\\MyCanBusTool\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAArwB4AAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-03T07:01:56.251Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
