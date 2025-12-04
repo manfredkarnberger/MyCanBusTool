@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyCanBusTool")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7abcbd7ff9acc6dcd2b7b6f0f1b97ee18ccbac7")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyCanBusTool")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyCanBusTool")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

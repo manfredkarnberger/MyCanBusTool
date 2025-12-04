@@ -18,3 +18,4 @@ D:\ws_VisualStudio\MyCanBusTool\obj\Debug\net10.0-windows\refint\MyCanBusTool.dl
 D:\ws_VisualStudio\MyCanBusTool\obj\Debug\net10.0-windows\MyCanBusTool.pdb
 D:\ws_VisualStudio\MyCanBusTool\obj\Debug\net10.0-windows\MyCanBusTool.genruntimeconfig.cache
 D:\ws_VisualStudio\MyCanBusTool\obj\Debug\net10.0-windows\ref\MyCanBusTool.dll
+D:\ws_VisualStudio\MyCanBusTool\obj\Debug\net10.0-windows\MyCanBusTool.sourcelink.json

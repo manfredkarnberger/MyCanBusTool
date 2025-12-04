@@ -16,10 +16,12 @@ namespace MyCanBusTool
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    using TPCANHandle = System.UInt16;
+
     public partial class MainWindow : Window
     {
         // Hardware Konfiguration
-        private const ushort PcanHandle = PCANBasic.PCAN_USBBUS1;
+        private const TPCANHandle PcanHandle = PCANBasic.PCAN_USBBUS1;
         private const TPCANBaudrate Baudrate = TPCANBaudrate.PCAN_BAUD_500K;
 
         // Threading & Timing
@@ -27,8 +29,12 @@ namespace MyCanBusTool
         private Thread _rxThread;
         private volatile bool _isRunning = false;
 
-        // Datenbindung
+        // Daten für die GUI
         public ObservableCollection<CanLogEntry> ReceivedMessages { get; set; }
+
+        // Simulations-Variablen für die Datenänderung
+        private double _sineWaveAngle = 0;
+        private byte _counter = 0;
 
         public MainWindow()
         {
@@ -36,15 +42,14 @@ namespace MyCanBusTool
             ReceivedMessages = new ObservableCollection<CanLogEntry>();
             DgMessages.ItemsSource = ReceivedMessages;
 
-            // Timer initialisieren, aber noch nicht starten
-            _txTimer = new MultimediaTimer(SendCyclicMessage);
+            // Timer initialisieren (ruft SendCyclicMessages auf)
+            _txTimer = new MultimediaTimer(SendCyclicMessages);
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             if (_isRunning) return;
 
-            // 1. Verbindung herstellen
             TPCANStatus status = PCANBasic.Initialize(PcanHandle, Baudrate);
 
             if (status != TPCANStatus.PCAN_ERROR_OK)
@@ -54,15 +59,17 @@ namespace MyCanBusTool
             }
 
             _isRunning = true;
-            TxtStatus.Text = "Connected & Running";
+            TxtStatus.Text = "Running (3 Msgs @ 10ms)";
 
-            // 2. RX Thread starten
-            _rxThread = new Thread(ReceiveLoop);
-            _rxThread.IsBackground = true; // Beendet sich automatisch wenn App schließt
-            _rxThread.Priority = ThreadPriority.AboveNormal;
+            // RX Thread starten
+            _rxThread = new Thread(ReceiveLoop)
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.AboveNormal
+            };
             _rxThread.Start();
 
-            // 3. TX Timer starten (10ms)
+            // TX Timer starten (10ms Zykluszeit)
             _txTimer.Start(10);
         }
 
@@ -75,37 +82,74 @@ namespace MyCanBusTool
         {
             _isRunning = false;
             _txTimer.Stop();
-
-            // Kurz warten, bis Thread fertig ist (optional sauber joinen)
-            Thread.Sleep(50);
-
+            Thread.Sleep(50); // Kurz warten bis Threads auslaufen
             PCANBasic.Uninitialize(PcanHandle);
             TxtStatus.Text = "Stopped";
         }
 
-        // --- TX: Senden alle 10ms (Aufgerufen vom Multimedia Timer Thread) ---
-        private void SendCyclicMessage()
+        // --- TX: Senden der 3 Nachrichten alle 10ms ---
+        // Diese Methode läuft auf dem Multimedia-Timer Thread (High Priority)
+        private void SendCyclicMessages()
         {
             if (!_isRunning) return;
 
-            TPCANMsg msg = new TPCANMsg();
-            msg.ID = 0x100;
-            msg.MSGTYPE = TPCANMessageType.PCAN_MESSAGE_STANDARD;
-            msg.LEN = 8;
+            // Daten generieren (damit wir Bewegung sehen)
+            _counter++;
+            _sineWaveAngle += 0.1;
+            byte sineVal = (byte)(Math.Sin(_sineWaveAngle) * 127 + 128);
 
-            // Dummy Daten: Zähler hochzählen
-            long ticks = DateTime.Now.Ticks;
-            msg.DATA = new byte[8];
-            msg.DATA[0] = (byte)(ticks & 0xFF);
-            msg.DATA[1] = (byte)((ticks >> 8) & 0xFF);
-            // ... Rest 0
+            // --- Nachricht 1: Status (ID 0x100) ---
+            byte[] data1 = new byte[8];
+            data1[0] = 0xAA;       // Marker
+            data1[1] = _counter;   // Laufender Zähler
+            SendSingleCanMessage(0x100, data1);
 
-            TPCANStatus status = PCANBasic.Write(PcanHandle, ref msg);
+            // --- Nachricht 2: Analogwert Simulation (ID 0x200) ---
+            byte[] data2 = new byte[8];
+            data2[0] = sineVal;    // Simulierter Sensorwert
+            data2[1] = (byte)(sineVal / 2);
+            SendSingleCanMessage(0x200, data2);
 
-            // Optional: Fehlerbehandlung, aber Vorsicht: Console/UI Zugriff hier teuer!
+            // --- Nachricht 3: Control Flags (ID 0x300) ---
+            byte[] data3 = new byte[4]; // Nur 4 Byte Länge (DLC 4)
+            data3[0] = 0x01;
+            data3[1] = 0x02;
+            data3[2] = 0x04;
+            data3[3] = 0x08;
+            SendSingleCanMessage(0x300, data3);
         }
 
-        // --- RX: Empfangen in separatem Thread ---
+        // Hilfsmethode zum Senden einer einzelnen Nachricht
+        private void SendSingleCanMessage(uint id, byte[] data)
+        {
+            TPCANMsg msg = new TPCANMsg();
+            msg.ID = id;
+            msg.MSGTYPE = TPCANMessageType.PCAN_MESSAGE_STANDARD;
+
+            // Die DLC (Data Length Code) bestimmt, wie viele Bytes tatsächlich gesendet werden
+            msg.LEN = (byte)data.Length;
+
+            // WICHTIG: Die Struktur benötigt für die DLL intern IMMER ein Array der Länge 8.
+            // Auch wenn wir nur 4 Bytes senden (LEN=4), muss das Array im Speicher 8 Bytes haben.
+            msg.DATA = new byte[8];
+
+            // Kopiere die Nutzdaten in den 8-Byte-Puffer
+            for (int i = 0; i < data.Length && i < 8; i++)
+            {
+                msg.DATA[i] = data[i];
+            }
+
+            // Jetzt passt das Array-Layout zur C-Struktur Definition
+            TPCANStatus status = PCANBasic.Write(PcanHandle, ref msg);
+
+            // Optional: Fehlerprüfung für Debugging
+            if (status != TPCANStatus.PCAN_ERROR_OK)
+            {
+                // System.Diagnostics.Debug.WriteLine($"Error sending ID {id:X}: {status}");
+            }
+        }
+
+        // --- RX: Empfangen ---
         private void ReceiveLoop()
         {
             TPCANMsg msg = new TPCANMsg();
@@ -113,17 +157,18 @@ namespace MyCanBusTool
 
             while (_isRunning)
             {
-                // Versuche Nachricht zu lesen
                 TPCANStatus status = PCANBasic.Read(PcanHandle, out msg, out timestamp);
 
                 if (status == TPCANStatus.PCAN_ERROR_OK)
                 {
+                    // Um zu verhindern, dass wir unsere EIGENEN gesendeten Nachrichten
+                    // im Grid sehen (Echo), filtern wir sie hier optional aus.
+                    // PCANBasic liefert standardmäßig keine TX-Echos, außer man konfiguriert es.
+
                     ProcessMessage(msg);
                 }
                 else
                 {
-                    // Wenn keine Nachrichten da sind, kurz schlafen um CPU zu schonen
-                    // Bei hoher Buslast kann man das Sleep verringern oder weglassen
                     Thread.Sleep(1);
                 }
             }
@@ -131,7 +176,6 @@ namespace MyCanBusTool
 
         private void ProcessMessage(TPCANMsg msg)
         {
-            // Datenformatierung vorbereiten
             string dataString = BitConverter.ToString(msg.DATA, 0, msg.LEN).Replace("-", " ");
 
             var entry = new CanLogEntry
@@ -142,15 +186,9 @@ namespace MyCanBusTool
                 Data = dataString
             };
 
-            // WICHTIG: UI-Update muss im UI-Thread passieren!
-            // Wir nutzen Application.Current.Dispatcher
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                // Performance-Tipp: Bei sehr vielen Nachrichten (>1000/s) 
-                // sollte man die Grid-Updates puffern/drosseln.
                 ReceivedMessages.Insert(0, entry);
-
-                // Speicher begrenzen (optional)
                 if (ReceivedMessages.Count > 100) ReceivedMessages.RemoveAt(ReceivedMessages.Count - 1);
             }));
         }
